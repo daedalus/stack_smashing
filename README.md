@@ -61,7 +61,7 @@ Then our main idea is to put a big enought nop-sled that takes almost all the bu
 
 Again we run our inocent program with a bunch of nops
 ```
-(gdb) run $(python -c 'print "\x41" * 524 ')
+(gdb) run $(python -c 'print "\x90" * 524 ')
 Program received signal SIGSEGV, Segmentation fault.
 0x00007f0090909090 in ?? ()
 ```
