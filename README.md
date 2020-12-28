@@ -1,4 +1,4 @@
-### smashing the stack the old way ###
+### Smashing the stack the old way ###
 
 Lets begin with a inocent program
 ```
