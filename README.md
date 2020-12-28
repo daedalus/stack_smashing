@@ -129,7 +129,7 @@ Fur last we need to add our rip address that is going to be overwriten:
 ived signal SIGSEGV, Segmentation fault.
 
 witch is **0x7fffffffdead** and in the x86_64 machine endianess:
-We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work.
+We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work. And we need to substract it from our nop-sled to not overshoot.
 
 Lets try:
 ```
@@ -140,7 +140,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 We got very close:
 
-0xffffffdead050f99 is not the address we wanted to 0x7fffffffdead
+**0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**
 
 We need to align our exploit to the machine registers in ram 
 A +2 will suffice
