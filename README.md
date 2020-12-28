@@ -163,7 +163,7 @@ Program received signal SIGSEGV, Segmentation fault.
 We got very close:
 
 **0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**\
-**0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.\
+**0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.
 
 We need to align our exploit to the machine registers in ram \
 A +2 will suffice (this also can vary from system to system somethimes can be +3 or +1)
