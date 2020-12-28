@@ -10,7 +10,7 @@ Our automatic variables will be placed in the stack region with function call pa
 Our dynamic memory will be loeaded into the heap, that is for mallocs, etc.\
 We are going to be fousing only on stack vulnerabilites.
 
-We need some dependencies:
+We will need some dependencies:
 ```
 sudo apt-get install gcc gdb
 ```
