@@ -112,9 +112,9 @@ Mapped address spaces:
       0x7ffffffde000     0x7ffffffff000    0x21000        0x0 [stack]
 
 ```
-Our stack is in the region of 0x7ffffffde000     0x7ffffffff000.
+Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.
 this means that our nop-sled will need to covert all this region and our rip address will need to point to some place in this region.
-lets say: 0x7fffffffdead
+lets say: **0x7fffffffdead**
 We also need to substract the payload from the nop sled, the payload is 23 bytes so 524-23
 
 Lets hit it again:
