@@ -24,7 +24,7 @@ See nothing happens
 $ ./vuln hello
 ```
 
-Now if we send than what we defined in our buffer
+Now if we send more than what we defined in our buffer
 ```
 $ ./vuln $(python -c 'print "\x41" * 524 ')
 Segmentation fault
