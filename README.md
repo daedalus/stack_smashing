@@ -227,7 +227,6 @@ Also we may need to disable selinux and apparmor in order for this exploit to wo
 ```
 sudo setenforce 0
 sudo systemctl stop apparmor
-
 ```
 And for last time:
 ```
