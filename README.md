@@ -1,7 +1,16 @@
 ### Smashing the stack the old way ###
 
-First of all we need some dependencies
+First of all lets introduce to the memory of the system:
 
+
+
+While the stack grows downward the heap grows upward.\
+Our program code will be loaded in the text region.\
+Our static variables will be placed in the stack region with function call parameters and everything that is static memory.\
+Our dynamic memory will be loeaded into the heap, that is for mallocs, etc.\
+We are going to be fousing only on stack vulnerabilites.
+
+We need some dependencies:
 ```
 sudo apt-get install gcc gdb
 ```
