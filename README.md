@@ -51,7 +51,7 @@ This means that now we control what the rip register point to.
 This is our powerfull weapon beacuse this is the vulnerability itself,
 becuse if we can control rip we can point it to our malicious code.
 
-Introduce the nop-sled:
+Lets Introduce the nop-sled:
 
 The NOOP instruction tells the CPU to do nothing and move to the next instruction.
 The nop sled is like: pincture boba fet falling into the sarlac pit.
@@ -208,4 +208,10 @@ $
 ```
 
 We got our exploit working.
+
+
+References
+
+* https://en.wikipedia.org/wiki/NOP_slide
+* https://en.wikipedia.org/wiki/Address_space_layout_randomization
 
