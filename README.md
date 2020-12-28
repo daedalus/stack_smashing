@@ -214,4 +214,5 @@ References
 
 * https://en.wikipedia.org/wiki/NOP_slide
 * https://en.wikipedia.org/wiki/Address_space_layout_randomization
+* http://phrack.org/issues/49/14.html
 
