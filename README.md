@@ -128,7 +128,7 @@ We are getting close:
 Fur last we need to add our rip address that is going to be overwriten:
 ived signal SIGSEGV, Segmentation fault.
 
-witch is 0x7fffffffdead and in the x86_64 machine endianess:
+witch is **0x7fffffffdead** and in the x86_64 machine endianess:
 We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work.
 
 Lets try:
@@ -194,7 +194,7 @@ Segmentation fault
 WTF? why didn't work?
 Newer versions of linux include ASLR or Address space layout randomization.
 ASLR is a technique of address randomization witch re arranges the internal mappings of the sections of a process memory.
-Our exploit didn't work beacuse we are asumming our program stack is going to be fixed in the range 0x7ffffffde000-0x7ffffffff000 and ASLR efectively prevents it to work beacuse in linux is enabled by defaut.
+Our exploit didn't work beacuse we are asumming our program stack is going to be fixed in the range **0x7ffffffde000-0x7ffffffff000** and ASLR efectively prevents it to work beacuse in linux is enabled by defaut.
 But we can disable it momentarily
 
 ```
