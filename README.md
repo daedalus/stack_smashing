@@ -28,14 +28,12 @@ int main(int argc, char** argv) {
     strcpy(buffer, argv[1]);
     return 0;
 }
-
 ```
 What our innocent program does is: it initializes a static variable of type char of size 500 and then tries to copy a string from command line. Nothing fancy.
 
 Lets compile it:
 ```
 gcc vuln.c -o vuln
-
 ```
 
 Attempting execution with a simple string such as 'hello' returns no errors:
@@ -132,7 +130,6 @@ Mapped address spaces:
       .
       0x7ffff7ffd000     0x7ffff7ffe000     0x1000    0x28000 /lib/x86_64-linux-gnu/ld-2.30.so
       0x7ffffffde000     0x7ffffffff000    0x21000        0x0 [stack]
-
 ```
 Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.\
 this means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.\
@@ -234,9 +231,7 @@ And for last time:
 $
 ```
 
-
 We got our exploit working.
-
 
 References
 
