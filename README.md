@@ -6,7 +6,7 @@ First of all we need some dependencies
 sudo apt-get install gcc gdb
 ```
 
-We asume that we have python2.7 installed beacuse we are going to use "\xHH" for escaping bytes and python3 doesnt handle them very well. Blame utf8 by default in this thing "\xHH" in python3.
+We asume that we have python2.7 as command python installed beacuse we are going to use "\xHH" for escaping bytes and python3 doesnt handle them very well. Blame utf8 by default in this thing "\xHH" in python3.
 We asume the target system fo the reader is a linux box x86_64, in other sistems should follow throught this readme with some minor modifications by the reader
 
 Lets begin with a inocent program
