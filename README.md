@@ -2,7 +2,7 @@
 
 First of all lets introduce to the memory of the system:
 
-(https://github.com/daedalus/stack_smashing/raw/master/program_in_memory2.png)
+![](https://github.com/daedalus/stack_smashing/raw/master/program_in_memory2.png)
 
 While the stack grows downward the heap grows upward.\
 Our program code will be loaded in the text region.\
