@@ -58,7 +58,7 @@ rsp            0x7fffffffdfe0	0x7fffffffdfe0
 rip            0x7f0041414141   0x7f0041414141
 ```
 This means that now we control what the _RIP_ register or (return instruction pointer) point to.\
-This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.\
+This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.
 
 The register _RSP_ point to the top of the current stack frame.\
 We will need to remember this value for later.
@@ -170,7 +170,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x00007fffffffdead in ?? ()
 ```
 
-But why didnt our exploit worked at all?
+But why didn't our exploit worked at all?
 
 Lets inspect our _RIP_:
 
