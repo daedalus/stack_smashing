@@ -2,11 +2,11 @@
 
 First of all lets introduce to the memory of the system:
 
-
+(https://github.com/daedalus/stack_smashing/raw/master/program_in_memory2.png)
 
 While the stack grows downward the heap grows upward.\
 Our program code will be loaded in the text region.\
-Our static variables will be placed in the stack region with function call parameters and everything that is static memory.\
+Our automatic variables will be placed in the stack region with function call parameters.\
 Our dynamic memory will be loeaded into the heap, that is for mallocs, etc.\
 We are going to be fousing only on stack vulnerabilites.
 
@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 }
 
 ```
+What our innocent program does is: it initializes a static variable of type char of size 500 and then tries to copy a string from command line. Nothing fancy.
 
 Lets compile it:
 ```
