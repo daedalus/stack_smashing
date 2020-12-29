@@ -7,7 +7,7 @@ Learn the concepts and transmit them in an inteligible manner to asure full comp
 To apply the later explored concepts as simple as possible to comprehend the consecuences of unintended and undefined behavior that arises a vulnerability such as stack smashing that eventualy can lead to a full system compromission.\
 To amuse my friends and have fun.
 
-First of all lets introduce to the memory of the system:
+#### First of all lets introduce to the memory of the system: ####
 
 ![](https://github.com/daedalus/stack_smashing/raw/master/program_in_memory2.png)
 
