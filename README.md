@@ -139,10 +139,19 @@ Mapped address spaces:
       0x7ffffffde000     0x7ffffffff000    0x21000        0x0 [stack]
 ```
 Our stack is in the region of **0x7ffffffde000-0x7ffffffff000**.\
-this means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.\
+This means that our _NÖP-sled_ will need to cover all this region and our _RIP_ address will need to point to some place in this region.\
 Lets say: **0x7fffffffdead** this value is arbitrary and has to be in range of the register _RSP_, in our case was **0x7fffffffdfe0**.\
+We are expecting that **0x7fffffffdead** will be the middle of our _NOP-sled_.
 This can vary from system to system distributions and kernels.\
-In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.\
+In other cases we need to adjust only the last byte of the address like: _(RSP - **our_choosen_value**) < 518_.
+Sometimes our stack can be in other ranges like **0x7ffffffde000-0x7ffffffff000**, in this other example the _NOP-sled_ will be at:
+```
+(gdb) x/10x $rsp-100
+0x7fffffffdbcc:	0x90909090	0x90909090	0x90909090	0x90909090
+0x7fffffffdbdc:	0x90909090	0x90909090	0x90909090	0x90909090
+0x7fffffffdbec:	0x90909090	0x90909090
+```
+Thats why wee need to remember _RSP_ and adjust the landing value of _RIP_ to be in the middle of the _NOP-sled_
 We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23.
 
 #### Lets hit it again: ####
