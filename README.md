@@ -2,9 +2,9 @@
 
 #### Motivation ####
 
-While stack smashing is an old technique to be shown in museums due to recent available broad mitigations it holds relevance still to this day beacuse it's implications that lies in the design of computers itself.\
+While stack smashing is an old technique to be shown in museums due to recent available broad mitigations, it holds relevance still to this day beacuse of it's implications that lie in the design of computers itself.\
 Learn the concepts and transmit them in an inteligible manner to asure full comprehension of the topic.\
-To apply the later explored concepts as simple as possible to comprehend the consecuences of unintended and undefined behavior that arises a vulnerability such as stack smashing.\
+To apply the later explored concepts as simple as possible to comprehend the consecuences of unintended and undefined behavior that arises a vulnerability such as stack smashing that eventualy can lead to a system compromission.\
 To amuse my friends and have fun.
 
 First of all lets introduce to the memory of the system:
