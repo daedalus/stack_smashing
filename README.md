@@ -241,6 +241,15 @@ $
 
 We got our exploit working.
 
+#### Extra bits ####
+
+If we set the bit of suid and change the owner of the binary to root.
+```
+chmod +s vuln
+chown root:root vuln
+```
+We may attain root.
+
 References
 
 * https://en.wikipedia.org/wiki/NOP_slide
