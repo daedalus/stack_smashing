@@ -249,7 +249,7 @@ $
 
 We got our exploit working.
 
-Thanks if you got to this point.
+Thank you for getting to this point.
 
 References
 
