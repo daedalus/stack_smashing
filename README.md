@@ -198,7 +198,6 @@ But why didn't our exploit worked at all?
 #### Lets inspect our _RIP_: ####
 
 ```
-0x00007fffffffdead in ?? ()
 (gdb) x/10x 0x00007fffffffdead
 0x7fffffffdead: 0x90909090  0x90909090  0x90909090  0x90909090
 0x7fffffffdebd: 0x90909090  0x90909090  0x90909090  0x90909090
