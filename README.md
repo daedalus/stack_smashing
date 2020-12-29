@@ -152,7 +152,7 @@ Sometimes our stack can be in other ranges like **0x7ffffffde000-0x7ffffffff000*
 0x7fffffffdbec:	0x90909090	0x90909090
 ```
 Thats why wee need to remember _RSP_ and adjust the landing value of _RIP_ to be in the middle of the _NOP-sled_
-We also need to substract the payload from the _NOP-sled_, the payload is 23 bytes so 524-23.
+We also need to substract the lenght of the payload from the total length of the overflow, the payload is 23 bytes so (524-23).
 
 #### Lets hit it again: ####
 ```
