@@ -230,7 +230,7 @@ Segmentation fault
 WTF? why it didn't work?\
 Newer versions of linux include _Address space layout randomization_ or _ASLR_ for short.\
 _ASLR_ is a technique of address randomization witch rearranges the internal mappings of the sections of a process memory.\
-Our exploit didn't work beacuse we are asumming our program stack is going to be in the fixed range **0x7ffffffde000-0x7ffffffff000** and _ASLR_ efectively prevents it to work beacuse in linux is enabled by defaut.\
+Our exploit didn't work beacuse we are asumming our program stack is going to be in the fixed range **0x7ffffffde000-0x7ffffffff000** and _ASLR_ efectively prevents it to work beacuse in linux is enabled by defaut.
 
 But we can disable it momentarily:
 ```
@@ -250,14 +250,7 @@ $
 
 We got our exploit working.
 
-#### Extra bits ####
-
-If we set the bit of suid and change the owner of the binary to root.
-```
-chmod +s vuln
-chown root:root vuln
-```
-We may attain root.
+Thanks if you got to this point.
 
 References
 
