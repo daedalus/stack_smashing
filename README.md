@@ -253,7 +253,7 @@ We got our exploit working.
 
 #### Extra bits ####
 
-Using the shellcode from https://www.exploit-db.com/exploits/13320
+Using the shellcode from https://www.exploit-db.com/exploits/13320, (48 bytes)
 
 And 
 
