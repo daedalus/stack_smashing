@@ -80,6 +80,9 @@ We will need to remember this value for later.
 
 #### _Lets Introduce the nop-sled:_ ####
 
+
+![](https://github.com/daedalus/stack_smashing/raw/master/NOP-sled-and-shellcode-appended-to-the-sequence.png)
+
 The _NOP_ instruction tells the CPU to do nothing and move to the next instruction.\
 The _NOP-sled_ is like: picture Boba Fet falling into the Sarlacc pit.\
 Anywhere we land into the middle of a _NOP-sled_ we end up in the same place.\
