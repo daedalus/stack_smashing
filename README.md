@@ -19,7 +19,7 @@ We are going to be fousing only on stack vulnerabilites.
 
 #### We will need some dependencies: ####
 ```
-sudo apt-get install gcc gdb
+sudo apt-get install gcc gdb nasm binutils
 ```
 
 We asume that we have _python2.7_ as command python installed beacuse we are going to use _"\xHH"_ for escaping bytes and python3 doesnt handle them very well. Blame _utf8_ by default in this thing _"\xHH"_ in python3.\
